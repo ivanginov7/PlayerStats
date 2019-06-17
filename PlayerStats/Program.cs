@@ -22,7 +22,7 @@ namespace PlayerStats
             try
             {
                 //check number of commandline arguments
-                if (args.Length != 4) {  throw new Exception("not enough commandline arguments provided"); }
+                if (args.Length < 4) {  throw new Exception("not enough commandline arguments provided"); }
                 //print arguments
                 //for (int i = 0; i < args.Length; i++)
                 //{
