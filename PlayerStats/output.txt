@@ -1,2 +1,6 @@
 Name, Rating
+Giannis Antetokounmpo, 96
+LeBron James, 96
+Stephen Curry, 95
 Trae Young, 84
+Jason Tatum, 84

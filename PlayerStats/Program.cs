@@ -14,17 +14,15 @@ namespace PlayerStats
         static void Main(string[] args)
         {
             List<Player> players;
-            string fullPath /*= @"D:\vssolutions\PlayerStats\PlayerStats\playerdata.json"*/;
-            byte maxNumberOfYearsPlayed /*= 10*/;
-            byte minimumRating /*= 55*/;
-            string pathToOutputFile /*= @"D:\vssolutions\PlayerStats\PlayerStats\output.txt"*/;
-            ushort filteredYear /*= (ushort) DateTime.Now.AddYears(-maxNumberOfYearsPlayed).Year*/;
+            QueryParams filter;
+            
             try
             {
                 //check number of commandline arguments
-                SanitizeInput(args, out fullPath, out maxNumberOfYearsPlayed, out minimumRating, out pathToOutputFile, out filteredYear);
-                players = AccessData(fullPath, minimumRating, filteredYear);
-                PrintToFile(players, pathToOutputFile);
+                filter = SanitizeInput(args);
+                //SanitizeInput(args, out fullPath, out maxNumberOfYearsPlayed, out minimumRating, out pathToOutputFile, out filteredYear);
+                players = AccessData(filter.fullPath, filter.minimumRating, filter.filteredYear);
+                PrintToFile(players, filter.pathToOutputFile);
 
                 //else { throw new Exception("not enough commandline arguments provided"); }
             }
@@ -62,8 +60,10 @@ namespace PlayerStats
             return players;
         }
 
-        private static void SanitizeInput(string[] args, out string fullPath, out byte maxNumberOfYearsPlayed, out byte minimumRating, out string pathToOutputFile, out ushort filteredYear)
+        
+        private static QueryParams SanitizeInput(string[] args)
         {
+            QueryParams result=new QueryParams() { };
             if (args.Length < 4) { throw new Exception("not enough commandline arguments provided"); }
             //print arguments
             //for (int i = 0; i < args.Length; i++)
@@ -72,22 +72,22 @@ namespace PlayerStats
             //}
             //get data source
             if (!File.Exists(args[0])) { throw new FileNotFoundException("File not found! Empty/invalid datasource directory"); }
-            fullPath = args[0];
+            result.fullPath = args[0];
             //get years    
-            if (!Byte.TryParse(args[1], out maxNumberOfYearsPlayed)) { throw new ArgumentException("Invalid numberOfYears"); }
-            filteredYear = (ushort)DateTime.Now.AddYears(-maxNumberOfYearsPlayed).Year;
+            try { result.maxNumberOfYearsPlayed = Byte.Parse(args[1]); } catch(Exception e) { throw new ArgumentException("Invalid numberOfYears "+e.Message); }
+            result.filteredYear = (ushort)DateTime.Now.AddYears(-result.maxNumberOfYearsPlayed).Year;
             //get rating
-            if (!Byte.TryParse(args[2], out minimumRating)) { throw new ArgumentException("Invalid rating"); }
+            try { result.minimumRating = Byte.Parse(args[2]); }catch (Exception e) { throw new ArgumentException("Invalid rating " + e.Message); }
             //get output
             if (!String.IsNullOrEmpty(args[3]) && !String.IsNullOrWhiteSpace(args[3]))
             {
-                pathToOutputFile = args[3];
+                result.pathToOutputFile = args[3];
             }
             else
             {
                 throw new ArgumentException("Empty/invalid output directory");
             }
-            //pathToOutputFile = args[3];
+            return result;
         }
     }
 }
