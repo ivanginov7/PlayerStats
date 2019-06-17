@@ -65,11 +65,7 @@ namespace PlayerStats
         {
             QueryParams result=new QueryParams() { };
             if (args.Length < 4) { throw new Exception("not enough commandline arguments provided"); }
-            //print arguments
-            //for (int i = 0; i < args.Length; i++)
-            //{
-            //    Console.WriteLine(args[i]);
-            //}
+            
             //get data source
             if (!File.Exists(args[0])) { throw new FileNotFoundException("File not found! Empty/invalid datasource directory"); }
             result.fullPath = args[0];
@@ -79,13 +75,15 @@ namespace PlayerStats
             //get rating
             try { result.minimumRating = Byte.Parse(args[2]); }catch (Exception e) { throw new ArgumentException("Invalid rating " + e.Message); }
             //get output
-            if (!String.IsNullOrEmpty(args[3]) && !String.IsNullOrWhiteSpace(args[3]))
+            if (!String.IsNullOrEmpty(args[3]) && !String.IsNullOrWhiteSpace(args[3])&& args[3].Length>=5 )
             {
+                
+                if (Path.GetExtension(args[3]) != ".txt"){ throw new Exception("Unsupported file format"); }
                 result.pathToOutputFile = args[3];
             }
             else
             {
-                throw new ArgumentException("Empty/invalid output directory");
+                throw new ArgumentException("Empty/invalid output directory"+ args[3].Reverse().ToString().Substring(0, 4)+ " "+args[3].Reverse().ToString());
             }
             return result;
         }
