@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlayerStats
 {
@@ -20,11 +18,10 @@ namespace PlayerStats
             {
                 //check number of commandline arguments
                 filter = SanitizeInput(args);
-                //SanitizeInput(args, out fullPath, out maxNumberOfYearsPlayed, out minimumRating, out pathToOutputFile, out filteredYear);
                 players = AccessData(filter.fullPath, filter.minimumRating, filter.filteredYear);
                 PrintToFile(players, filter.pathToOutputFile);
 
-                //else { throw new Exception("not enough commandline arguments provided"); }
+                
             }
             catch (Exception e)
             {
